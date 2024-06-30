@@ -1,0 +1,34 @@
+.hero-banners{
+    background-image: url('../images/pexels-julia-m-cameron-4144923.jpg'); 
+    height:100vh; 
+    background-size: cover; /* Ensure the image covers the entire background */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    max-width: 100%;
+    overflow-x: hidden;
+}
+@media screen and (max-width: 676px) {
+    h1 {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0); 
+        font-weight: 600; 
+        font-size:45px;
+        }
+    h1 ::before{
+        content: "\A"; /* Use the escape sequence for a line break */
+        white-space: pre; /* Preserve whitespace */
+    }
+  }
+@media screen and (min-width: 676px) and (max-width:991px) {
+h1 {
+    text-shadow: 4px 2px 2px rgba(0, 0, 0); 
+    font-weight: 600; 
+    font-size:50px;
+    }
+}
+@media screen and (min-width: 991px) {
+h1 {
+    text-shadow: 4px 2px 2px rgba(0, 0, 0); 
+    font-weight: 700; 
+    font-size:50px;
+    }
+}
