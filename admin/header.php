@@ -7,7 +7,7 @@ include '../templates/header.php';
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="assets/css/header.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<nav class="navbar" style="background-color: #2596be;">
+<nav class="navbar" style="background-color: #2596be; position:absolute; width:100%; ">
     <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <button class="navbar-toggler" type="button" id="sidebarCollapse" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@ include '../templates/header.php';
             <!-- </button> -->
             <a class="navbar-brand text-white ms-2 px-5" href="#">Online Leave Management System - PHP - Admin</a>
         </div>
-        <div class="dropdown px-2">
+        <div class="dropdown px-2" style="position: absolute; right: 30px;">
             <button class="btn btn-light dropdown-toggle bttn rounded-pill" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="../assets/images/585e4bcdcb11b227491c3396.png" alt="" width="25" height="25" class="rounded-circle">
                 Administator Admin

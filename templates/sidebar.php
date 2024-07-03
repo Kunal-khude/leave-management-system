@@ -73,7 +73,7 @@
   </style>
 </head>
 <body>
-  <div class="container-fluid" style="height: 100vh;">
+  <div class="container-fluid">
     <div class="row">
       <!-- Sidebar -->
       <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
@@ -136,7 +136,7 @@
         </ul>
       </nav>
       <!-- Page Content -->
-      <main id="content" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+      <main id="content" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" style="position: relative;">
         <!-- <button type="button" id="sidebarCollapse" class="btn btn-info mt-3">
           <i class="fas fa-align-left"></i>
           <span>Toggle Sidebar</span>
@@ -144,7 +144,7 @@
             
     <?php
     include '../admin/header.php';
-    include '../admin/table.php';
+      include '../admin/table.php';
     include '../templates/footer.php';
     ?>  
       </main>
