@@ -116,6 +116,12 @@
           <i class="fas fa-users me-2"></i>Employees List
         </a>
       </li>
+      
+      <li>
+        <a href="./manage_role.php" class="nav-link text-white">
+          <i class="fas fa-user me-2"></i>Role Management
+        </a>
+      </li>
       <li>
         <a href="#reports" class="nav-link text-white">
           <i class="fas fa-chart-bar me-2"></i>Leave Reports
@@ -134,11 +140,6 @@
 
 
 
-      <li>
-        <a href="#user-list" class="nav-link text-white">
-          <i class="fas fa-user me-2"></i>Role Management
-        </a>
-      </li>
 
       <li>
         <a href="#settings" class="nav-link text-white">
