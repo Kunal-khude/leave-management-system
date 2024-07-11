@@ -11,22 +11,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $conn->real_escape_string($user);
 
     // Fetch the user's hashed password from the database
-    $sql = "SELECT password FROM `users` WHERE `username` = '$user' OR `email` = '$user'";
+    $sql = "SELECT password,id,role_id FROM `users` WHERE `username` = '$user' OR `email` = '$user'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
+        // print_r($row);
         $hashedPassword = $row['password'];
         $user_id = $row['id'];
+        $role = $row['role_id'];
+
+
 
 
         // Verify the password
         if (password_verify($pass, $hashedPassword)) {
             // Redirect to the admin page on successful login
-            header("Location: http://localhost/Leave-Management-System/admin/index.php");
             $_SESSION['username'] = $user;
             $_SESSION['user_id'] = $user_id;
-            exit();
+            $_SESSION['loggedin'] = true;
+            $_SESSION['role'] = $role;
+            // Example: Restrict access based on role
+            if ($role === 'Employee') {
+                // Redirect or show an error page for unauthorized access
+                // echo "You are not authorized to access this page.";
+                header("Location: http://localhost/Leave-Management-System/admin/own_reports.php");
+                exit;
+            } else {
+
+
+                header("Location: http://localhost/Leave-Management-System/admin/index.php");
+                exit();
+            }
         } else {
             echo "
     <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">

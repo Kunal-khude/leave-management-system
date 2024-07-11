@@ -1,5 +1,16 @@
 <?php
-echo "Welcome to Admin";
+// echo "Welcome to Admin";
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect to login page if not logged in
+    header("Location: http://localhost/Leave-Management-System/login.php");
+    exit;
+}
+// rule for employee
+include '../admin/employee_role.php';
+
 include '../templates/header.php';
 ?>
 

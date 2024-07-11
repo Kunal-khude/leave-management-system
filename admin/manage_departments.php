@@ -1,5 +1,23 @@
 <?php
 session_start();
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect to login page if not logged in
+    header("Location: http://localhost/Leave-Management-System/login.php");
+    exit;
+}
+// rule for employee
+include '../admin/employee_role.php';
+
+// Example: Restrict access based on role
+if ($userRole === 'HOD') {
+    // Redirect or show an error page for unauthorized access
+    echo "You are not authorized to access this page.";
+    header("Location: http://localhost/Leave-Management-System/admin/index.php");
+    exit;
+}
+
+
 include '../templates/header.php';
 
 // Handle form submissions

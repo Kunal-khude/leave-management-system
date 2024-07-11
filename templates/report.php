@@ -65,12 +65,12 @@
                     <h5 class="modal-title" id="createReportModalLabel">Create Report</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" id="fullName" value="<?php echo $_SESSION['user_id']; ?>"> <!-- Hidden Full Name Field -->
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="fullName" value="<?php echo htmlspecialchars($_SESSION['user_id']); ?>" name="fullName"> <!-- Hidden Full Name Field -->
                         <div class="mb-3">
                             <label for="leaveType" class="form-label">Leave Type</label>
-                            <select class="form-select" id="leaveType">
+                            <select class="form-select" id="leaveType" name="leaveType">
                                 <?php
                                 foreach ($leaveArray as $leaveType) {
                                     echo "<option value='" . $leaveType['type'] . "'>" . $leaveType['type'] . "</option>";
@@ -80,22 +80,22 @@
                         </div>
                         <div class="mb-3">
                             <label for="start_date" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="start_date">
+                            <input type="date" class="form-control" id="start_date" name="start_date">
                         </div>
                         <div class="mb-3">
                             <label for="end_date" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="end_date">
+                            <input type="date" class="form-control" id="end_date" name="end_date">
                         </div>
                         <div class="mb-3">
                             <label for="reason" class="form-label">Reason</label>
-                            <textarea class="form-control" id="reason" rows="3"></textarea>
+                            <textarea class="form-control" id="reason" rows="3" name="reason"></textarea>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnSubmitReport" data-bs-dismiss="modal">Submit Report</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitReport" data-bs-dismiss="modal">Submit Report</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -112,48 +112,70 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Leave Type</th>
+                            <th>Reason</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th colspan="2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>4</td>
-                            <td>Admin</td>
-                            <td>admin@example.com</td>
-                            <td>123-456-7890</td>
-                            <td>Sick Leave</td>
-                            <td>Active</td>
-                            <td>
-                                <button type="button" class="btn btn-warning update-btn" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
-                                <button type="button" class="btn btn-danger delete-btn">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Principal</td>
-                            <td>principal@example.com</td>
-                            <td>098-765-4321</td>
-                            <td>Annual Leave</td>
-                            <td>Active</td>
-                            <td>
-                                <button type="button" class="btn btn-warning update-btn" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
-                                <button type="button" class="btn btn-danger delete-btn">Delete</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>HOD</td>
-                            <td>hod@example.com</td>
-                            <td>555-123-4567</td>
-                            <td>Personal Leave</td>
-                            <td>Active</td>
-                            <td>
-                                <button type="button" class="btn btn-warning update-btn" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
-                                <button type="button" class="btn btn-danger delete-btn">Delete</button>
-                            </td>
-                        </tr>
+                        <?php
+                        // SQL query to fetch data from leave_report
+                        $sql_leave_report = "SELECT id, employee_id, leave_type, reason, status FROM leave_report";
+                        $result_leave_report = $conn->query($sql_leave_report);
+
+                        if ($result_leave_report->num_rows > 0) {
+                            // Output data of each row
+                            while ($row_leave_report = $result_leave_report->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row_leave_report["id"] . "</td>";
+
+                                // Fetch user data based on employee_id
+                                $employee_id = $row_leave_report['employee_id'];
+                                $sql_users = "SELECT full_name, email, phone FROM users WHERE id = ?";
+                                $stmt = $conn->prepare($sql_users);
+                                $stmt->bind_param("i", $employee_id);
+                                $stmt->execute();
+                                $result_users = $stmt->get_result();
+
+                                if ($result_users->num_rows > 0) {
+                                    // Assuming only one user per employee_id for simplicity
+                                    $user = $result_users->fetch_assoc();
+                                    echo "<td>" . $user["full_name"] . "</td>";
+                                    echo "<td>" . $user["email"] . "</td>";
+                                    echo "<td>" . $user["phone"] . "</td>";
+                                } else {
+                                    echo "<td colspan='3'>User not found</td>";
+                                }
+
+                                echo "<td>" . $row_leave_report["leave_type"] . "</td>";
+                                echo "<td>" . $row_leave_report["reason"] . "</td>";
+                                echo "<td>" . $row_leave_report["status"] . "</td>";
+
+                                echo "<td>
+                <button type='button' class='btn btn-warning update-btn' 
+                    data-bs-toggle='modal' 
+                    data-bs-target='#updateModal' 
+                    data-id='" . $row_leave_report["id"] . "'>Update</button>";
+
+                                echo "<form method='POST' action='" . htmlspecialchars($_SERVER['PHP_SELF']) . "' style='display: inline;' onsubmit='return confirmDelete();'>
+                <button type='submit' name='delete' class='btn btn-danger delete-btn' value='" . $row_leave_report['id'] . "'>Delete</button>
+            </form>
+            </td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='8'>No data found</td></tr>";
+                        }
+                        ?>
                     </tbody>
+
+                    <script>
+                        function confirmDelete() {
+                            return confirm("Are you sure you want to delete this item?");
+                        }
+                    </script>
+
+
                 </table>
             </div>
         </div>
@@ -167,41 +189,46 @@
                     <h5 class="modal-title" id="updateModalLabel">Update Record</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" id="updateid" value="" name="updateid"> <!-- Hidden Full Name Field -->
+
                         <div class="mb-3">
-                            <label for="id" class="form-label">ID</label>
-                            <input type="text" class="form-control" id="id" readonly>
+                            <label for="updateleaveTypes" class="form-label">Leave Type</label>
+                            <select class="form-select" id="updateleaveTypes" name="updateleaveTypes">
+                                <?php
+                                foreach ($leaveArray as $leaveType) {
+                                    echo "<option value='" . $leaveType['type'] . "'>" . $leaveType['type'] . "</option>";
+                                }
+                                ?>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="fullName" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="fullName">
+                            <label for="updatestatus" class="form-label">Status</label>
+                            <select class="form-select" name="updatestatus" id="updatestatus">
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="phone">
-                        </div>
-                        <div class="mb-3">
-                            <label for="leaveType" class="form-label">Leave Type</label>
-                            <input type="text" class="form-control" id="leaveType">
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control" id="status">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.update-btn').click(function() {
+                var id = $(this).data('id'); // Get the id from data attribute
+                $('#updateid').val(id); // Set the value of the hidden input field
+            });
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>

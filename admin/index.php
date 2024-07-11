@@ -1,6 +1,5 @@
 <?php
 session_start();
-include '../templates/header.php';
 // echo "Welcome to pricipal dashboard";
 // Accessing session variables
 // if (isset($_SESSION['username'])) {
@@ -8,6 +7,18 @@ include '../templates/header.php';
 // } else {
 //     echo 'Please log in.';
 // }
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // Redirect to login page if not logged in
+    header("Location: http://localhost/Leave-Management-System/login.php");
+    exit;
+}
+// rule for employee
+include '../admin/employee_role.php';
+
+// echo "Welcome, " . $userRole;
+include '../templates/header.php';
+
 ?>
 
 
