@@ -20,7 +20,7 @@
     <div class="card">
         <div class="card-header">Data Tables</div>
         <div class="d-flex justify-content-end ">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#department">
+            <button type="button" class="btn btn-primary mx-4 mt-4" data-bs-toggle="modal" data-bs-target="#department">
                 Create New
             </button>
             <div class="modal fade" id="department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,7 +78,7 @@
                                             </head>
 
                                             <div class="container form-container">
-                                                !-- Update Staff Modal -->
+                                                <!-- Update Staff Modal -->
                                                 <div class="modal fade" id="updateModal" tabindex="-1">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
@@ -341,7 +341,7 @@
                             <td>" . $row["email"] . "</td>
                             <td>
                                 <p class='m-0'>
-                                    <b>" . $row["department_id"] . "</b><br>
+                                    <b>" . $row["department"] . "</b><br>
                                 </p>
                             </td>
                             <td class='show'>
@@ -352,9 +352,7 @@
                                         <span class='sr-only'></span>
                                     </button>
                                     <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
-                                        <li><a class='dropdown-item' href='?page=employees/records&amp;id=" . $row["id"] . "'><span class='fa fa-eye text-info'></span> View</a></li>
                                         <li><a class='dropdown-item edit_employee' href='javascript:void(0)' data-id='" . $row["id"] . "'><span class='fa fa-edit text-primary'></span> Edit</a></li>
-                                        <li><a class='dropdown-item reset_password' href='javascript:void(0)' data-id='" . $row["id"] . "'><span class='fa fa-key text-primary'></span> Reset Password</a></li>
                                         <li><a class='dropdown-item delete_data' href='javascript:void(0)' data-id='" . $row["id"] . "'><span class='fa fa-trash text-danger'></span> Delete</a></li>
                                     </ul>
                                 </div>
@@ -376,28 +374,30 @@
                         </div>
                         <div class='modal-body'>
                             <!-- Form for editing employee details -->
-                            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
+                            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+
                                 <input type='hidden' id='employeeId' name='employeeId' value=''>
 
                                 <div class='mb-3'>
                                     <label for='fullName' class='form-label'>Full Name</label>
-                                    <input type='text' class='form-control' id='fullName' name='fullName' required>
+                                    <input type='text' class='form-control' id='fullName' name='fullName' value='' required>
                                 </div>
 
                                 <div class='mb-3'>
-                                    <label for='email' class='form-label'>Email</label>
-                                    <input type='email' class='form-control' id='email' name='email' required>
+                                    <label for='email_update' class='form-label'>Email</label>
+                                    <input type='email' class='form-control' id='email_update' name='email' value='' required>
                                 </div>
 
                                 <div class='mb-3'>
-                                    <label for="department">Department</label>
-                                    <select id="department" class="form-control" name="department" required>
+                                    <label for="department_update">Department</label>
+                                    <select id="department_update" class="form-control" name="department_update" required>
                                         <?php
-                                        // Assuming `conn` is your database connection object
+                                        // Populate department options
                                         $sql = "SELECT * FROM department";
                                         $result = $conn->query($sql);
                                         while ($row = $result->fetch_assoc()) {
-                                            echo "<option value='" . $row['name'] . "'>" . $row['name'] . "</option>";
+                                            $selected = ($row['name'] == $department) ? "selected" : "";
+                                            echo "<option value='" . $row['name'] . "' $selected>" . $row['name'] . "</option>";
                                         }
                                         ?>
                                     </select>
@@ -405,38 +405,89 @@
 
                                 <button type='submit' class='btn btn-primary'>Save Changes</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
             </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
             <!-- JavaScript to handle modal and form -->
             <script>
                 $(document).ready(function() {
                     $('.edit_employee').click(function() {
                         var employeeId = $(this).data('id');
-                        console.log(employeeId);
+                        // console.log(employeeId);
                         $('#employeeId').val(employeeId); // Set employeeId in hidden input
+
+
+                        // AJAX request using fetch
+                        fetch('../admin/getdata.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    employeeId: employeeId
+                                })
+                            })
+                            .then(function(response) {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                // Handle success response
+                                // console.log(data);
+                                if (data.success) {
+                                    var fullName = data.full_name;
+                                    var email = data.email;
+                                    var department = data.department;
+
+                                    // Do something with the retrieved data, e.g., populate form fields
+                                    document.getElementById('fullName').value = fullName;
+                                    document.getElementById('email_update').value = email;
+                                    document.getElementById('department_update').value = department;
+                                } else {
+                                    // Handle case where no user is found
+                                    console.log('No user found with ID: ' + employeeId);
+                                    // You might want to show an alert or handle this differently
+                                }
+                            })
+                            .catch(function(error) {
+                                // Handle error.
+                                console.error('Error fetching user data:', error);
+                            });
+
+
                         $('#editModal').modal('show'); // Show the modal
                     });
 
-                    $('#editForm').submit(function(event) {
-                        event.preventDefault();
-                        var formData = $(this).serialize();
-                        // Handle form submission (e.g., AJAX)
-                        // $.ajax({
-                        //     url: 'update_employee.php',
-                        //     type: 'POST',
-                        //     data: formData,
-                        //     success: function (response) {
-                        //         alert('Employee details updated successfully.');
-                        //         $('#editModal').modal('hide');
-                        //     },
-                        //     error: function () {
-                        //         alert('Error updating employee details.');
-                        //     }
-                        // });
-                        $('#editModal').modal('hide'); // Close modal after submission (example)
+
+                });
+                $(document).ready(function() {
+
+                    $(".delete_data").click(function() {
+                        var idToDelete = $(this).data('id');
+                        // console.log(idToDelete);
+
+                        // Send AJAX request
+                        $.ajax({
+                            type: "POST",
+                            url: "../admin/delete_row.php",
+                            data: {
+                                id: idToDelete
+                            },
+                            success: function(response) {
+                                alert(response); // Alert success or error message
+                                location.reload();
+
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                            }
+                        });
                     });
                 });
             </script>

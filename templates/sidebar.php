@@ -90,14 +90,14 @@
   <!-- Sidebar -->
   <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar p-0">
     <div class="sidebar-header">
-      <a href="/" class="d-flex align-items-center text-white text-decoration-none">
+      <a href="../admin/index.php" class="d-flex align-items-center text-white text-decoration-none">
         <img src="../assets/images/SGI_logo.png" alt="Logo" style="width: 50px; height: 50px;" class="me-2">
         <span class="fs-4">Sanjay Ghodawat</span>
       </a>
     </div>
     <ul class="nav flex-column components">
       <li class="nav-item">
-        <a href="./dashboard.php" class="nav-link text-white">
+        <a href="./index.php" class="nav-link text-white">
           <i class="fas fa-tachometer-alt me-2"></i>Dashboard
         </a>
       </li>
@@ -119,27 +119,20 @@
       
       <li>
         <a href="./manage_role.php" class="nav-link text-white">
-          <i class="fas fa-user me-2"></i>Role Management
+          <i class="fas fa-id-badge me-2"></i>Role Management
         </a>
       </li>
       <li>
-        <a href="#reports" class="nav-link text-white">
+        <a href="./leave_report.php" class="nav-link text-white">
           <i class="fas fa-chart-bar me-2"></i>Leave Reports
         </a>
       </li>
-      <li>
-        <a href="#designation-list" class="nav-link text-white">
-          <i class="fas fa-id-badge me-2"></i>Roles Manage
-        </a>
-      </li>
+  
       <li>
         <a href="#application-list" class="nav-link text-white">
-          <i class="fas fa-file-alt me-2"></i>Application List
+          <i class="fas fa-file-alt me-2"></i>My Applications
         </a>
       </li>
-
-
-
 
       <li>
         <a href="#settings" class="nav-link text-white">

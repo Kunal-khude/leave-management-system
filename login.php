@@ -1,32 +1,55 @@
 <?php
+session_start();
 include 'templates/header.php';
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $_POST['username'];
     $pass = $_POST['password'];
-    // echo $user;
-    // echo $pass;
-    $sql = "SELECT * FROM `users` WHERE `username` = '$user' || `email` = '$user' AND `password` = '$pass'";
+
+    // Sanitize user input to prevent SQL injection
+    $user = $conn->real_escape_string($user);
+
+    // Fetch the user's hashed password from the database
+    $sql = "SELECT password FROM `users` WHERE `username` = '$user' OR `email` = '$user'";
     $result = $conn->query($sql);
 
-    // if ($result) {
-    //     header("Location: http://localhost/Leave-Management-System/admin/index.php");
-    //     exit();
-    // }
-    echo "<pre>";
     if ($result->num_rows > 0) {
-        // echo "Login Successful";
-        header("Location: http://localhost/Leave-Management-System/admin/index.php");
-        exit();
-    } else {
-        echo "Login Failed";
-    }
-    echo "</pre>";
-} else {
-    echo "No data posted";
-}
+        $row = $result->fetch_assoc();
+        $hashedPassword = $row['password'];
+        $user_id = $row['id'];
 
+
+        // Verify the password
+        if (password_verify($pass, $hashedPassword)) {
+            // Redirect to the admin page on successful login
+            header("Location: http://localhost/Leave-Management-System/admin/index.php");
+            $_SESSION['username'] = $user;
+            $_SESSION['user_id'] = $user_id;
+            exit();
+        } else {
+            echo "
+    <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+        <strong>Error!</strong> Invalid credentials.
+        <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+            <span aria-hidden=\"true\">&times; </span>
+        </button>
+    </div>
+";
+        }
+    } else {
+        echo "
+        <div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">
+            <strong>Error!</strong> Invalid credentials.
+            <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">
+                <span aria-hidden=\"true\">&times; </span>
+            </button>
+        </div>
+    ";
+    }
+} else {
+    // echo "No data posted.";
+}
 
 
 // if ($conn->query($sql) === TRUE) {

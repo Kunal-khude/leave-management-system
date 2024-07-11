@@ -5,7 +5,7 @@ include '../templates/header.php';
 <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 <title>Bootstrap Example</title>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="assets/css/header.css">
+<!-- <link rel="stylesheet" href="assets/css/header.css"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <nav class="navbar" style="background-color: #2596be; position:relative; width:100%; ">
     <div class="container d-flex justify-content-between align-items-center">
@@ -18,10 +18,16 @@ include '../templates/header.php';
             <!-- </button> -->
             <a class="navbar-brand text-white ms-2 px-5" href="#">Online Leave Management System - PHP - Admin</a>
         </div>
-        <div class="dropdown px-2" style="position: absolute; right: 30px;">
+        <div class="dropdown px-2" style="position: absolute; right: 60px;">
             <button class="btn btn-light dropdown-toggle bttn rounded-pill" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="../assets/images/585e4bcdcb11b227491c3396.png" alt="" width="25" height="25" class="rounded-circle">
-                Administator Admin
+                <?php
+                if (isset($_SESSION['username'])) {
+                    echo $_SESSION['username'];
+                } else {
+                    echo "Please Login";
+                }
+                ?>
             </button>
             <ul class="dropdown-menu border-1" aria-labelledby="dropdownMenuLink">
                 <li class="row align-items-center justify-content-center border-2">
@@ -53,7 +59,7 @@ include '../templates/header.php';
                         <i class="fa fa-right-from-bracket" style="font-size: 20px; padding-left: 15px;"></i>
                     </div>
                     <div class="col-10 text-start">
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item" href="../logout.php">Logout</a>
                     </div>
                 </li>
             </ul>

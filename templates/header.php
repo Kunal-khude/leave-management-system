@@ -32,7 +32,6 @@ error_reporting(E_ERROR | E_PARSE);
   <link href="<?php echo $base_url; ?>/assets/vendor/quill/quill.snow.css" rel="stylesheet">
   <link href="<?php echo $base_url; ?>/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="<?php echo $base_url; ?>/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="<?php echo $base_url; ?>/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="<?php echo $base_url; ?>/assets/css/style.css" rel="stylesheet">
@@ -40,12 +39,6 @@ error_reporting(E_ERROR | E_PARSE);
   <script src="<?php echo $base_url; ?>/assets/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
-  <script
-  src="https://code.jquery.com/jquery-3.7.1.min.js"
-  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-  crossorigin="anonymous"></script>
-  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
 
 </head>
 
